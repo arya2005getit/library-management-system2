@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="page">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Library Dashboard</p>
+                <h1>Library Management System</h1>
+            </div>
+            <p class="count"><%= data.length %> Books</p>
+        </header>
+
+        <section class="panel">
+            <h2>Add Book</h2>
+            <% if (success) { %>
+                <p role="status" class="message success-message"><%= success %></p>
+            <% } %>
+            <% if (error) { %>
+                <p role="alert" class="message error-message"><%= error %></p>
+            <% } %>
+            <form class="book-form" action="/" method="POST">
+                <input type="text" name="bookId" placeholder="Book ID" required>
+                <input type="text" name="bookTitle" placeholder="Book Title" required>
+                <input type="text" name="bookAuthor" placeholder="Author" required>
+                <input type="text" name="bookCategory" placeholder="Category" required>
+                <select name="bookStatus" required>
+                    <option value="Available">Available</option>
+                    <option value="Issued">Issued</option>
+                </select>
+                <button type="submit">Add Book</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Book List</h2>
+            <% data.forEach((book, index) => { %>
+                <form id="update-book-<%= index %>" action="/update" method="POST"></form>
+                <form id="delete-book-<%= index %>" action="/delete" method="POST"></form>
+            <% }) %>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% data.forEach((book, index) => { %>
+                            <tr>
+                                <td>
+                                    <input class="table-input id-input" form="update-book-<%= index %>" type="text" name="bookId" value="<%= book.bookId %>" readonly>
+                                </td>
+                                <td>
+                                    <input class="table-input" form="update-book-<%= index %>" type="text" name="bookTitle" value="<%= book.bookTitle %>" required>
+                                </td>
+                                <td>
+                                    <input class="table-input" form="update-book-<%= index %>" type="text" name="bookAuthor" value="<%= book.bookAuthor %>" required>
+                                </td>
+                                <td>
+                                    <input class="table-input" form="update-book-<%= index %>" type="text" name="bookCategory" value="<%= book.bookCategory %>" required>
+                                </td>
+                                <td>
+                                    <select class="table-input" form="update-book-<%= index %>" name="bookStatus" required>
+                                        <option value="Available" <%= book.bookStatus === 'Available' ? 'selected' : '' %>>Available</option>
+                                        <option value="Issued" <%= book.bookStatus === 'Issued' ? 'selected' : '' %>>Issued</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="small-btn update-btn" form="update-book-<%= index %>" type="submit">Update</button>
+                                </td>
+                                <td>
+                                    <input form="delete-book-<%= index %>" type="hidden" name="bookId" value="<%= book.bookId %>">
+                                    <button class="small-btn delete-btn" form="delete-book-<%= index %>" type="submit">Delete</button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
